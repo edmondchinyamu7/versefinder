@@ -1,4 +1,4 @@
-const verses = [
+let verses = [
  {ref:"Philippians 4:6-7",text:"Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",topics:["Peace","Anxiety","Prayer","Hope"]},
  {ref:"Isaiah 41:10",text:"Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",topics:["Strength","Fear","Hope"]},
  {ref:"Psalm 23:1",text:"The LORD is my shepherd; I shall not want.",topics:["Comfort","Faith","Hope"]},
@@ -20,7 +20,52 @@ const verses = [
  {ref:"Galatians 6:9",text:"And let us not be weary in well doing: for in due season we shall reap, if we faint not.",topics:["Strength","Purpose","Hope"]},
  {ref:"Psalm 37:4",text:"Delight thyself also in the LORD; and he shall give thee the desires of thine heart.",topics:["Faith","Purpose","Trust"]},
  {ref:"Hebrews 11:1",text:"Now faith is the substance of things hoped for, the evidence of things not seen.",topics:["Faith","Hope"]}
-];
+];;
+const BIBLE_BOOKS=["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
+let bibleLoaded=false, bibleLoading=null;
+function bookCacheKey(name){return "vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_")}
+async function fetchKjvBook(name){
+ const key=bookCacheKey(name);
+ try{const cached=localStorage.getItem(key);if(cached)return JSON.parse(cached)}catch{}
+ const url="https://raw.githubusercontent.com/midvash/bible-data/main/versions/en/kjv/books/"+encodeURIComponent(name)+".json";
+ const response=await fetch(url);if(!response.ok)throw new Error("Could not load "+name);
+ const data=await response.json();
+ try{localStorage.setItem(key,JSON.stringify(data))}catch{}
+ const bookName=data.book||data.name||name, out=[];
+ const chapters=data.chapters||[];
+ if(Array.isArray(chapters)){
+  chapters.forEach((chapter,ci)=>{
+   const rows=chapter.verses||[];
+   rows.forEach((v,vi)=>{
+    const textValue=typeof v==="string"?v:v.text;
+    if(textValue)out.push({ref:bookName+" "+(chapter.chapter||ci+1)+":"+(v.verse||vi+1),text:String(textValue).replace(/\\s+/g," ").trim(),topics:[]});
+   });
+  });
+ }else{
+  Object.entries(chapters).forEach(([chapterNo,chapter])=>Object.entries(chapter.verses||chapter).forEach(([verseNo,v])=>{
+   const textValue=typeof v==="string"?v:v.text;
+   if(textValue)out.push({ref:bookName+" "+chapterNo+":"+verseNo,text:String(textValue).replace(/\\s+/g," ").trim(),topics:[]});
+  }));
+ }
+ return out;
+}
+async function loadFullBible(){
+ if(bibleLoaded)return;
+ if(bibleLoading)return bibleLoading;
+ bibleLoading=(async()=>{
+  const all=[];
+  for(let i=0;i<BIBLE_BOOKS.length;i+=6){
+   const batch=await Promise.all(BIBLE_BOOKS.slice(i,i+6).map(async name=>{try{return await fetchKjvBook(name)}catch(err){console.warn("VerseFinder: book unavailable",name,err);return []}}));
+   batch.forEach(rows=>all.push(...rows));
+  }
+  const seen=new Set(verses.map(v=>v.ref.toLowerCase()));
+  all.forEach(v=>{if(!seen.has(v.ref.toLowerCase())){verses.push(v);seen.add(v.ref.toLowerCase())}});
+  bibleLoaded=all.length>30000;
+  if(!bibleLoaded)throw new Error("The complete Bible library could not be loaded. Check your connection and try again.");
+ })().finally(()=>{bibleLoading=null});
+ return bibleLoading;
+}
+
 const topics=[["Peace","☁","For a calm and steady heart"],["Strength","⚡","When you need courage"],["Love","♡","The gift of love"],["Anxiety","☾","When worries feel heavy"],["Guidance","✧","For your next step"],["Hope","☀","A reason to keep going"],["Faith","◇","Trusting beyond what you see"],["Comfort","❋","For difficult days"],["Prayer","⌁","Growing closer to God"],["Purpose","➶","Finding meaning"],["Fear","♧","When you feel afraid"],["Rest","☁","Permission to pause"]];
 const plan=[["Begin with trust","Proverbs 3:5-6"],["Courage for today","Joshua 1:9"],["Peace in prayer","Philippians 4:6-7"],["Strength in hard times","Isaiah 41:10"],["Hope for tomorrow","Jeremiah 29:11"],["Rest for your soul","Matthew 11:28"],["Keep walking in faith","Hebrews 11:1"]];
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -40,6 +85,12 @@ function normalizeReference(input){
 let searchRequest=0;
 async function renderSearch(){
  const raw=$("#searchInput").value.trim(),q=raw.toLowerCase(),request=++searchRequest,normalized=normalizeReference(raw);
+ if(q&&!bibleLoaded){
+  $("#resultsMeta").textContent="Loading the complete KJV library (31,102 verses)…";
+  $("#searchResults").innerHTML='<div class="verse-item">Preparing the full Bible search. This may take a moment the first time.</div>';
+  try{await loadFullBible()}catch(error){if(request!==searchRequest)return;$("#resultsMeta").textContent="Using the available verse collection";console.warn(error)}
+  if(request!==searchRequest)return;
+ }
  let found=verses.filter(v=>(!activeTopic||v.topics.includes(activeTopic))&&(!q||v.text.toLowerCase().includes(q)||v.ref.toLowerCase().includes(q)||v.topics.some(t=>t.toLowerCase().includes(q))||!!(normalized&&v.ref.toLowerCase()===normalized.toLowerCase())));
  if(found.length){$("#resultsMeta").textContent=`${found.length} ${found.length===1?'verse':'verses'} found${activeTopic?' in '+activeTopic:''}`;$("#searchResults").innerHTML=found.map(verseCard).join("");return}
  if(normalized&&!activeTopic){
