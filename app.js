@@ -55,13 +55,13 @@ function parseKjvBook(data,name){
    const rows=chapter.verses||[];
    rows.forEach((v,vi)=>{
     const textValue=typeof v==="string"?v:v.text;
-    if(textValue)out.push({ref:bookName+" "+(chapter.chapter||ci+1)+":"+(v.verse||vi+1),text:String(textValue).replace(/\\s+/g," ").trim(),topics:[]});
+    if(textValue)out.push({ref:bookName+" "+(chapter.chapter||ci+1)+":"+(v.verse||vi+1),text:String(textValue).replace(/\s+/g," ").trim(),topics:[]});
    });
   });
  }else{
   Object.entries(chapters).forEach(([chapterNo,chapter])=>Object.entries(chapter.verses||chapter).forEach(([verseNo,v])=>{
    const textValue=typeof v==="string"?v:v.text;
-   if(textValue)out.push({ref:bookName+" "+chapterNo+":"+verseNo,text:String(textValue).replace(/\\s+/g," ").trim(),topics:[]});
+   if(textValue)out.push({ref:bookName+" "+chapterNo+":"+verseNo,text:String(textValue).replace(/\s+/g," ").trim(),topics:[]});
   }));
  }
  return out;
