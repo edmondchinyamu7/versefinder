@@ -22,15 +22,32 @@ let verses = [
  {ref:"Hebrews 11:1",text:"Now faith is the substance of things hoped for, the evidence of things not seen.",topics:["Faith","Hope"]}
 ];;
 const BIBLE_BOOKS=["Genesis","Exodus","Leviticus","Numbers","Deuteronomy","Joshua","Judges","Ruth","1 Samuel","2 Samuel","1 Kings","2 Kings","1 Chronicles","2 Chronicles","Ezra","Nehemiah","Esther","Job","Psalms","Proverbs","Ecclesiastes","Song of Solomon","Isaiah","Jeremiah","Lamentations","Ezekiel","Daniel","Hosea","Joel","Amos","Obadiah","Jonah","Micah","Nahum","Habakkuk","Zephaniah","Haggai","Zechariah","Malachi","Matthew","Mark","Luke","John","Acts","Romans","1 Corinthians","2 Corinthians","Galatians","Ephesians","Philippians","Colossians","1 Thessalonians","2 Thessalonians","1 Timothy","2 Timothy","Titus","Philemon","Hebrews","James","1 Peter","2 Peter","1 John","2 John","3 John","Jude","Revelation"];
-let bibleLoaded=false, bibleLoading=null;
-function bookCacheKey(name){return "vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_")}
+let bibleLoaded=false, bibleLoading=null, bibleDbPromise=null;
+function bibleDb(){
+ if(!("indexedDB" in window))return Promise.resolve(null);
+ if(!bibleDbPromise)bibleDbPromise=new Promise(resolve=>{
+  const req=indexedDB.open("versefinder_bible",1);
+  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains("books"))req.result.createObjectStore("books")};
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>resolve(null);
+ });
+ return bibleDbPromise;
+}
+async function cachedBook(name){
+ try{const db=await bibleDb();if(db)return await new Promise(resolve=>{const req=db.transaction("books","readonly").objectStore("books").get(name);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null)})}catch{}
+ try{const raw=localStorage.getItem("vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_"));return raw?JSON.parse(raw):null}catch{return null}
+}
+async function saveBook(name,data){
+ try{const db=await bibleDb();if(db){await new Promise(resolve=>{const tx=db.transaction("books","readwrite");tx.objectStore("books").put(data,name);tx.oncomplete=tx.onerror=()=>resolve()});return}}catch{}
+ try{localStorage.setItem("vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_"),JSON.stringify(data))}catch{}
+}
 async function fetchKjvBook(name){
- const key=bookCacheKey(name);
- try{const cached=localStorage.getItem(key);if(cached)return JSON.parse(cached)}catch{}
+ const cached=await cachedBook(name);if(cached)return parseKjvBook(cached,name);
  const url="https://raw.githubusercontent.com/midvash/bible-data/main/versions/en/kjv/books/"+encodeURIComponent(name)+".json";
  const response=await fetch(url);if(!response.ok)throw new Error("Could not load "+name);
- const data=await response.json();
- try{localStorage.setItem(key,JSON.stringify(data))}catch{}
+ const data=await response.json();await saveBook(name,data);
+ return parseKjvBook(data,name);
+}
+function parseKjvBook(data,name){
  const bookName=data.book||data.name||name, out=[];
  const chapters=data.chapters||[];
  if(Array.isArray(chapters)){
