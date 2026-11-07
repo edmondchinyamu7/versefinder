@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#17152a">
+  <title>VerseFinder — Find strength in every season</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">✦</span><span>Verse<span class="brand-accent">Finder</span><small>WORD FOR EVERY SEASON</small></span></a>
+      <div class="nav-label">DISCOVER</div>
+      <button class="nav-item active" data-view="home">⌂ <span>Home</span></button>
+      <button class="nav-item" data-view="search">⌕ <span>Find a verse</span></button>
+      <button class="nav-item" data-view="topics">◇ <span>Browse topics</span></button>
+      <div class="nav-label">MY SPACE</div>
+      <button class="nav-item" data-view="favorites">♡ <span>Saved verses</span><b id="favCount">0</b></button>
+      <button class="nav-item" data-view="journal">✎ <span>Prayer journal</span></button>
+      <button class="nav-item" data-view="plan">▤ <span>Reading plan</span></button>
+      <div class="sidebar-bottom">
+        <div class="verse-mini">“Thy word is a lamp unto my feet, and a light unto my path.”<small>PSALM 119:105 · KJV</small></div>
+        <button id="themeToggle" class="theme-toggle">☼ <span>Switch appearance</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="mobile-brand">✦ VerseFinder</div>
+        <div class="top-date" id="todayLabel"></div>
+        <button class="icon-button" id="headerTheme" aria-label="Toggle theme">☼</button>
+      </header>
+
+      <section class="view active" id="view-home">
+        <div class="welcome">
+          <div><div class="eyebrow">A MOMENT IN THE WORD</div><h1>Find the words<br><em>your heart needs.</em></h1>
+          <p>Discover scripture for every season, save the verses that speak to you, and grow one day at a time.</p>
+          <button class="primary-button" data-go="search">Find a verse <span>→</span></button></div>
+          <div class="welcome-art"><div class="sun-glow"></div><div class="open-book">✧</div><div class="art-caption">BE STILL<br><small>AND KNOW</small></div></div>
+        </div>
+        <div class="section-heading"><div><div class="eyebrow">A LITTLE LIGHT FOR TODAY</div><h2>Verse of the day</h2></div><button class="text-button" id="newDaily">Another verse ↗</button></div>
+        <article class="daily-card" id="dailyCard"></article>
+        <div class="home-grid">
+          <div><div class="section-heading"><div><div class="eyebrow">WHERE IS YOUR HEART?</div><h2>Explore by feeling</h2></div><button class="text-button" data-go="topics">All topics →</button></div>
+            <div class="topic-grid" id="homeTopics"></div></div>
+          <div class="quick-card"><div class="eyebrow">YOUR JOURNEY</div><h2>Make space<br>for the Word.</h2><p>Keep your favourite verses close and build a simple daily reading rhythm.</p><button class="outline-button" data-go="plan">Open reading plan →</button></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-search">
+        <div class="page-intro"><div class="eyebrow">SCRIPTURE DISCOVERY</div><h1>Find a verse.</h1><p>Search words, references, or choose a topic to explore.</p></div>
+        <div class="search-box"><span>⌕</span><input id="searchInput" placeholder="Try “fear”, “John 3:16”, or “peace”…" autocomplete="off"><button id="clearSearch">×</button></div>
+        <div class="filter-row" id="searchFilters"></div>
+        <div class="results-meta" id="resultsMeta">Explore all verses</div>
+        <div class="verse-list" id="searchResults"></div>
+      </section>
+
+      <section class="view" id="view-topics">
+        <div class="page-intro"><div class="eyebrow">A WORD FOR EVERY SEASON</div><h1>Browse topics.</h1><p>Whatever you're walking through, find encouragement in scripture.</p></div>
+        <div class="topic-grid large" id="allTopics"></div>
+      </section>
+
+      <section class="view" id="view-favorites">
+        <div class="page-intro"><div class="eyebrow">KEPT CLOSE</div><h1>Saved verses.</h1><p>Your personal collection of words worth returning to.</p></div>
+        <div class="verse-list" id="favoriteResults"></div>
+      </section>
+
+      <section class="view" id="view-journal">
+        <div class="page-intro"><div class="eyebrow">A QUIET PLACE TO REFLECT</div><h1>Prayer journal.</h1><p>Write your prayers, reflections, and things you're grateful for.</p></div>
+        <div class="journal-layout"><form id="journalForm" class="journal-form"><label for="journalTitle">Entry title</label><input id="journalTitle" placeholder="A prayer for today"><label for="journalText">Your reflection</label><textarea id="journalText" rows="7" placeholder="Write what's on your heart…"></textarea><button class="primary-button">Save entry →</button></form><div><h2 class="small-heading">Your entries</h2><div id="journalEntries" class="journal-entries"></div></div></div>
+      </section>
+
+      <section class="view" id="view-plan">
+        <div class="page-intro"><div class="eyebrow">GROW A LITTLE EVERY DAY</div><h1>7 days in the Word.</h1><p>A gentle reading plan about building a life rooted in hope.</p></div>
+        <div class="plan-progress"><div><strong id="planProgress">0 of 7 completed</strong><span>Every step counts.</span></div><div class="progress-track"><i id="progressFill"></i></div></div>
+        <div id="planDays" class="plan-days"></div>
+      </section>
+      <footer>VerseFinder <span>·</span> Made for moments that matter.</footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
