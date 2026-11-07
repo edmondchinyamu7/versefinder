@@ -23,3 +23,7 @@ This starter edition uses a small built-in sample of King James Version (KJV) ve
 
 ## Important
 This is a web app source project, not a compiled Android APK. To publish as an Android app, wrap the web app with Capacitor or build a native Android shell, then compile/sign it with Android tooling. Internet is needed for the optional Google Fonts import and online Bible reference lookups; the app otherwise runs locally.
+
+## Full Bible search
+
+VerseFinder can load the complete 66-book King James Version library (31,102 verses) from the open-source [Midvash Bible Data](https://github.com/midvash/bible-data) project. The KJV text is identified there as public domain. The app caches downloaded book data in IndexedDB when available, so later searches can use the locally cached library. An internet connection is needed for the first download.
