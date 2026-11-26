@@ -2,18 +2,19 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 
-for (const file of ["app.js", "v3.js", "sw.js", "tests/smoke-test.mjs"]) {
+for (const file of ["app.js", "v3.js", "study.js", "sw.js", "tests/smoke-test.mjs"]) {
   const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
   assert.equal(result.status, 0, `${file} syntax check failed: ${result.stderr}`);
 }
-const [html, manifestText, serviceWorker, reader, readme, app, styles] = await Promise.all([
+const [html, manifestText, serviceWorker, reader, readme, app, styles, study] = await Promise.all([
   readFile("index.html", "utf8"),
   readFile("manifest.webmanifest", "utf8"),
   readFile("sw.js", "utf8"),
   readFile("v3.js", "utf8"),
   readFile("README.md", "utf8"),
   readFile("app.js", "utf8"),
-  readFile("styles.css", "utf8")
+  readFile("styles.css", "utf8"),
+  readFile("study.js", "utf8")
 ]);
 const manifest = JSON.parse(manifestText);
 assert.ok(html.includes('rel="manifest"'), "manifest must be linked");
@@ -25,6 +26,14 @@ assert.ok(manifestText.includes("icon.svg"), "install icon must be configured");
 assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be cached");
 assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service worker must preserve unrelated origin caches");
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
+assert.ok(serviceWorker.includes('"./study.js"'), "study tools must be included in the offline app shell");
+assert.ok(html.includes('src="study.js"'), "personal study tools must be loaded");
+assert.ok(study.includes("vf_collections"), "custom verse collections must be stored locally");
+assert.ok(study.includes("VerseFinder study backup"), "personal study backup export and restore must be supported");
+assert.ok(study.includes("exportStudyData") && study.includes("importStudyData"), "backup controls must be wired");
+assert.ok(app.includes("data-edit-journal"), "journal entries must support editing");
+assert.ok(app.includes("data-collection-verse"), "verse cards must offer collection saving");
+assert.ok(reader.includes("readerDownloadBook"), "reader must offer a book download for offline use");
 assert.ok(reader.includes("fetchKjvBook"), "reader must load real KJV book data");
 assert.ok(app.includes('const BIBLE_BOOK_FILE_IDS=["Gen","Exod"'), "KJV loader must map English book names to OSIS filenames");
 assert.ok(app.includes('data.englishName||data.name||name'), "KJV parser must display the full English book name");

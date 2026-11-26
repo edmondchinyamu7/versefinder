@@ -16,6 +16,7 @@
       <button class="action-button" id="readerNext" type="button">Next →</button>
       <label class="reader-jump-label">Verse <input id="readerVerseNumber" type="number" min="1" value="1" inputmode="numeric" aria-label="Verse number"></label>
       <button class="primary-button reader-jump-button" id="readerGoToVerse" type="button">Go to verse</button>
+      <button class="action-button" id="readerDownloadBook" type="button">↓ Download book</button>
     </div>
     <div class="reader-status" id="readerStatus" role="status">Choose a book and chapter to begin.</div>
     <article class="reader-page"><h2 id="readerHeading">Genesis 1</h2><div id="readerVerses" class="reader-verses"></div></article>
@@ -36,6 +37,7 @@
   $("#readerPrevious").addEventListener("click", () => moveChapter(-1));
   $("#readerNext").addEventListener("click", () => moveChapter(1));
   $("#readerGoToVerse").addEventListener("click", goToVerse);
+  $("#readerDownloadBook").addEventListener("click", async () => {const button=$("#readerDownloadBook"),status=$("#readerStatus");button.disabled=true;button.textContent="Downloading…";status.textContent="Downloading "+currentBook+" for offline reading…";try{const rows=await window.fetchKjvBook(currentBook);if(!rows.length)throw new Error("No verses were returned");status.textContent=currentBook+" is saved on this device for offline reading ("+rows.length.toLocaleString()+" verses).";button.textContent="✓ Downloaded"}catch(error){status.textContent="Download failed. Check your connection and try again.";button.textContent="↓ Download book"}finally{button.disabled=false}});
   $("#readerVerseNumber").addEventListener("keydown", event => { if (event.key === "Enter") goToVerse(); });
   function updateChapters() {
     const cached = window.vfBookMeta && window.vfBookMeta[currentBook];
@@ -144,11 +146,11 @@
     if (!button) return;
     const reference = button.dataset.note;
     const existing = notes[reference] || {};
-    const note = prompt("Add a personal note for " + reference + ":", existing.note || "");
+    const note = prompt("Personal study note for " + reference + ":", existing.note || "");
     if (note === null) return;
-    const highlighted = confirm("Highlight this verse?");
-    notes[reference] = { note, highlighted };
-    try { localStorage.setItem("vf_notes", JSON.stringify(notes)); } catch { alert("Your browser storage is full. Export or remove some saved items."); }
+    const highlighted = confirm("Highlight this verse? Choose Cancel to leave it unhighlighted.");
+    notes[reference] = { ...existing, note: note.trim(), highlighted };
+    try { localStorage.setItem("vf_notes", JSON.stringify(notes)); } catch { alert("Your browser storage is full. Export a backup or remove some items."); }
     loadChapter();
   });
   updateChapters();
