@@ -34,6 +34,8 @@ assert.ok(reader.includes("vf_notes"), "reader notes must be stored locally");
 assert.ok(reader.includes("async function moveChapter(direction)"), "reader must support cross-book navigation");
 assert.ok(reader.includes("readerVerseNumber"), "reader must provide direct verse navigation");
 assert.ok(reader.includes("window.vfOpenReference"), "reader must open a verse reference directly");
+assert.ok(app.includes('data-open-ref="${escapeHtml(v.ref)}"'), "verse search cards must link into the reader");
+assert.ok(app.includes("window.vfOpenReference(reference)"), "search results must open the selected reference in the reader");
 assert.ok(reader.includes("scrollIntoView"), "direct verse navigation must bring the selected verse into view");
 assert.ok(styles.includes(".reader-jump-label"), "reader verse navigation must have dedicated responsive styles");
 assert.ok(app.includes("Continue in hope"), "30-day reading plan must be included");
