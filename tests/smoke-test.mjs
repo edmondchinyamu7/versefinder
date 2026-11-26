@@ -24,6 +24,8 @@ assert.ok(!html.includes("\\n"), "HTML must not contain escaped line-break text"
 assert.equal(manifest.name, "VerseFinder 3.0");
 assert.equal(manifest.display, "standalone");
 assert.ok(manifestText.includes("icon.svg"), "install icon must be configured");
+assert.ok(manifest.icons.some(icon => icon.sizes === "192x192"), "PWA manifest must declare a 192px install icon");
+assert.ok(manifest.icons.some(icon => icon.sizes === "512x512"), "PWA manifest must declare a 512px install icon");
 assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be cached");
 assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service worker must preserve unrelated origin caches");
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
