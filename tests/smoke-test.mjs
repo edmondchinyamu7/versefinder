@@ -26,7 +26,7 @@ assert.equal(manifest.display, "standalone");
 assert.ok(manifestText.includes("icon.svg"), "install icon must be configured");
 assert.ok(manifest.icons.some(icon => icon.sizes === "192x192"), "PWA manifest must declare a 192px install icon");
 assert.ok(manifest.icons.some(icon => icon.sizes === "512x512"), "PWA manifest must declare a 512px install icon");
-assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be cached");
+assert.ok(serviceWorker.includes("cache.addAll(APP_SHELL.map("), "offline shell must be cached during installation");
 assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service worker must preserve unrelated origin caches");
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
 assert.ok(serviceWorker.includes('"./study.js"'), "study tools must be included in the offline app shell");
@@ -41,7 +41,7 @@ assert.ok(html.includes('class="skip-link"'), "keyboard users must have a skip l
 assert.ok(html.includes('id="installApp" type="button">＋ Install app'), "install option must remain visible before the browser prompt is available");
 assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
 assert.ok(platform.includes("beforeinstallprompt"), "PWA install prompt must be supported");
-assert.ok(platform.includes("serviceWorker.register(\"./sw.js\""), "the app must register its service worker");
+assert.ok(platform.includes('serviceWorker.register("./sw.js"'), "the app must register its service worker");
 assert.ok(platform.includes("serviceWorker.ready"), "service-worker updates must be handled");
 assert.ok(serviceWorker.includes("APP_SHELL_URL"), "offline navigation must have a stable cached homepage fallback");
 assert.ok(study.includes("vf_collections"), "custom verse collections must be stored locally");
