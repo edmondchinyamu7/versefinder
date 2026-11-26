@@ -15,16 +15,16 @@ const [html, manifestText, serviceWorker, reader, readme, app] = await Promise.a
   readFile("app.js", "utf8")
 ]);
 const manifest = JSON.parse(manifestText);
-assert.match(html, /rel="manifest"/, "manifest must be linked");
-assert.match(html, /src="v3\\.js"/, "reader script must be loaded");
-assert.doesNotMatch(html, /\\\\n/, "HTML must not contain escaped line-break text");
+assert.ok(html.includes('rel="manifest"'), "manifest must be linked");
+assert.ok(html.includes('src="v3.js"'), "reader script must be loaded");
+assert.ok(!html.includes("\\n"), "HTML must not contain escaped line-break text");
 assert.equal(manifest.name, "VerseFinder 3.0");
 assert.equal(manifest.display, "standalone");
-assert.match(manifestText, /icon\\.svg/, "install icon must be configured");
-assert.match(serviceWorker, /addAll\\(APP_SHELL\\)/, "offline shell must be cached");
-assert.match(serviceWorker, /addEventListener\\("fetch"/, "offline fetch handler must exist");
-assert.match(reader, /fetchKjvBook/, "reader must load real KJV book data");
-assert.match(reader, /vf_notes/, "reader notes must be stored locally");
-assert.match(app, /Continue in hope/, "30-day reading plan must be included");
-assert.match(readme, /Chichewa Bible[\\s\\S]*permission/i, "copyright boundary must be documented");
+assert.ok(manifestText.includes("icon.svg"), "install icon must be configured");
+assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be cached");
+assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
+assert.ok(reader.includes("fetchKjvBook"), "reader must load real KJV book data");
+assert.ok(reader.includes("vf_notes"), "reader notes must be stored locally");
+assert.ok(app.includes("Continue in hope"), "30-day reading plan must be included");
+assert.ok(readme.includes("permission is required"), "copyright boundary must be documented");
 console.log("VerseFinder 3.0 smoke tests passed.");
