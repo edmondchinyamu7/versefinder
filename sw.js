@@ -1,4 +1,4 @@
-const CACHE_NAME = "versefinder-v3-2-navigation";
+const CACHE_NAME = "versefinder-v3-3-premium-nav";
 const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -12,7 +12,7 @@ self.addEventListener("fetch", event => {
   const request = event.request;
   if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) return;
   const url = new URL(request.url);
-  const isAppShell = request.mode === "navigate" || /\\.(?:html|js|css)$/.test(url.pathname);
+  const isAppShell = request.mode === "navigate" || /\.(?:html|js|css)$/.test(url.pathname);
   if (isAppShell) {
     event.respondWith(fetch(request).then(response => {
       if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
