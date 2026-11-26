@@ -42,7 +42,7 @@ assert.ok(html.includes('id="installApp" type="button">＋ Install app'), "insta
 assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
 assert.ok(platform.includes("beforeinstallprompt"), "PWA install prompt must be supported");
 assert.ok(platform.includes('serviceWorker.register("./sw.js"'), "the app must register its service worker");
-assert.ok(platform.includes("serviceWorker.ready"), "service-worker updates must be handled");
+assert.ok(platform.includes("registration.update()"), "service-worker updates must be checked");
 assert.ok(serviceWorker.includes("APP_SHELL_URL"), "offline navigation must have a stable cached homepage fallback");
 assert.ok(study.includes("vf_collections"), "custom verse collections must be stored locally");
 assert.ok(study.includes("VerseFinder study backup"), "personal study backup export and restore must be supported");
