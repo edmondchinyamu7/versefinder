@@ -66,7 +66,7 @@
 
       <section class="view" id="view-favorites">
         <div class="page-intro"><div class="eyebrow">KEPT CLOSE</div><h1>Saved verses.</h1><p>Your personal collection of words worth returning to.</p></div>
-        <div class="verse-list" id="favoriteResults"></div>
+        <section class="study-tools" aria-labelledby="studyToolsHeading"><div class="study-tools-heading"><div><div class="eyebrow">YOUR PERSONAL STUDY SPACE</div><h2 id="studyToolsHeading">Collections & backup</h2></div></div><form id="collectionForm" class="collection-create"><label for="collectionName">New collection</label><input id="collectionName" maxlength="40" placeholder="e.g. Verses about gratitude" required><button class="primary-button" type="submit">Create collection</button></form><div id="collectionManager" class="collection-manager"></div><div class="backup-controls"><div><strong>Keep your study data safe</strong><p>Export or restore saved verses, collections, notes, journal entries and reading progress on this device.</p></div><div class="backup-actions"><button id="exportStudyData" class="action-button" type="button">Export backup</button><label class="action-button backup-import-label" for="importStudyData">Restore backup</label><input id="importStudyData" type="file" accept="application/json,.json" hidden></div></div></section><div class="verse-list" id="favoriteResults"></div>
       </section>
 
       <section class="view" id="view-journal">
@@ -96,5 +96,6 @@
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js"></script>
   <script src="v3.js"></script>
+  <script src="study.js"></script>
 </body>
 </html>
