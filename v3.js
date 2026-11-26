@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const books = typeof BIBLE_BOOKS !== "undefined" ? BIBLE_BOOKS : [];
   const notes = (() => { try { return JSON.parse(localStorage.getItem("vf_notes") || "{}"); } catch { return {}; } })();
-  let currentBook = "Genesis", currentChapter = 1, currentVerses = [];
+  let currentBook = "Genesis", currentChapter = 1, currentVerses = [], currentMaxChapter = 50;
   const section = document.createElement("section");
   section.className = "view";
   section.id = "view-reader";
