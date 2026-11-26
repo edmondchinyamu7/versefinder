@@ -1,7 +1,7 @@
 {
   "name": "VerseFinder 3.0",
   "short_name": "VerseFinder",
-  "description": "Discover, read and save Bible verses.",
+  "description": "Read, search, save and study Bible verses online or offline.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#f7f5f1",
