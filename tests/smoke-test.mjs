@@ -7,7 +7,7 @@ for (const file of files) {
   const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
   assert.equal(result.status, 0, `${file} syntax check failed: ${result.stderr}`);
 }
-const [html, manifestText, serviceWorker, reader, readme] = await Promise.all([
+const [html, manifestText, serviceWorker, reader, readme, app] = await Promise.all([
   readFile("index.html", "utf8"),
   readFile("manifest.webmanifest", "utf8"),
   readFile("sw.js", "utf8"),
@@ -23,6 +23,6 @@ assert.equal(manifest.display, "standalone");
 assert.match(serviceWorker, /addAll\(APP_SHELL\)/, "offline shell must be cached");
 assert.match(serviceWorker, /addEventListener\("fetch"/, "offline fetch handler must exist");
 assert.match(reader, /fetchKjvBook/, "reader must load real KJV book data");
-assert.match(reader, /vf_notes/, "reader notes must be stored locally");
+assert.match(reader, /vf_notes/, "reader notes must be stored locally");\nassert.match(app, /Continue in hope/, "30-day reading plan must be included");\nassert.match(manifestText, /icon\\.svg/, "install icon must be configured");
 assert.match(readme, /Chichewa Bible[\s\S]*permission/i, "copyright boundary must be documented");
 console.log("VerseFinder 3.0 smoke tests passed.");
