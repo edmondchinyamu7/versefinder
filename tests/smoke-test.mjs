@@ -36,7 +36,7 @@ const navigationSource = app.slice(app.indexOf("function navigate"), app.indexOf
 assert.ok(navigationSource.includes(allViewsSelector), "navigation must use the all-elements selector for every view");
 assert.ok(!navigationSource.replace(allViewsSelector, "").includes(singleViewSelector), "navigation must not call forEach on the single-element selector");
 assert.ok(html.includes('class="skip-link"'), "keyboard users must have a skip link");
-assert.ok(html.includes('id="installApp"'), "install prompt control must exist");
+assert.ok(html.includes('id="installApp" type="button">＋ Install app'), "install option must remain visible before the browser prompt is available");
 assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
 assert.ok(platform.includes("beforeinstallprompt"), "PWA install prompt must be supported");
 assert.ok(platform.includes("serviceWorker"), "service-worker updates must be handled");
