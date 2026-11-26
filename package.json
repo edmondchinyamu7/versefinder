@@ -1,0 +1,9 @@
+{
+  "name": "versefinder",
+  "version": "3.0.0",
+  "private": true,
+  "description": "A responsive Bible discovery and reading app",
+  "scripts": {
+    "test": "node tests/smoke-test.mjs"
+  }
+}
