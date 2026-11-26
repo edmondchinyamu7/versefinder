@@ -4,6 +4,9 @@
   "private": true,
   "description": "A responsive Bible discovery and reading app",
   "scripts": {
-    "test": "node tests/smoke-test.mjs"
+    "test": "node tests/smoke-test.mjs",
+    "dev": "npx --yes vite --host 0.0.0.0",
+    "build": "npx --yes vite build",
+    "preview": "npx --yes vite preview --host 0.0.0.0"
   }
 }
