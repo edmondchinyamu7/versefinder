@@ -1,5 +1,5 @@
 const CACHE_NAME = "versefinder-v3-shell";
-const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./manifest.webmanifest"];
+const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./manifest.webmanifest", "./icon.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
 });
