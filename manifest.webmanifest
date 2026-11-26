@@ -1,0 +1,10 @@
+{
+  "name": "VerseFinder 3.0",
+  "short_name": "VerseFinder",
+  "description": "Discover, read and save Bible verses.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7f5f1",
+  "theme_color": "#211d39",
+  "icons": []
+}
