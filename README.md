@@ -1,29 +1,26 @@
-# VerseFinder 2.0
+# VerseFinder 3.0 (development)
 
-A responsive, browser-based Bible verse discovery app.
+A responsive Bible discovery and reading app, built with plain HTML, CSS and JavaScript.
 
-## Included features
-- Search verse text, references, and topics
-- Reference lookup accepts formats such as `John 10:10`, `John 10 vs 10`, and `Jn 10:10`
-- Online KJV lookup for references not in the built-in sample collection
-- Browse topic collections
-- Daily verse and random verse
-- Save favourites
-- Copy and share verses
-- Prayer journal with local persistence
-- Seven-day reading plan with progress tracking
-- Light/dark appearance
-- Responsive desktop and mobile navigation
+## Features
+- Search KJV verse text and references; browse topical collections.
+- Read the KJV book by book and chapter by chapter.
+- Save favourites, prayer journal entries, reading progress, verse notes and highlights locally on the device.
+- Responsive layout and light/dark appearance.
+- Installable web-app shell with service-worker caching for offline access to the app interface.
+- Downloaded KJV books are cached in IndexedDB for subsequent offline reading.
 
-## Run it
-Open `index.html` in a modern browser. No build tools or server are required.
+## Run locally
+Serve this folder over localhost (for example, with VS Code Live Server). Service workers require HTTPS or localhost. Opening the HTML file directly still allows the basic app to run, but offline installation will not be enabled.
 
-## Data and privacy
-This starter edition uses a small built-in sample of King James Version (KJV) verses. Favourites, journal entries, reading progress, and theme preference are stored in the browser's localStorage on that device. They are not synced between devices.
+## Bible data and attribution
+The KJV book data is fetched from [Midvash Bible Data](https://github.com/midvash/bible-data). The dataset repository describes its KJV text as public domain and its data licensing per translation. VerseFinder caches books after a successful download. A first-time download requires internet access.
 
-## Important
-This is a web app source project, not a compiled Android APK. To publish as an Android app, wrap the web app with Capacitor or build a native Android shell, then compile/sign it with Android tooling. Internet is needed for the optional Google Fonts import and online Bible reference lookups; the app otherwise runs locally.
+## Chichewa Bible
+The Buku Lopatulika text is not bundled or copied into this project. The Bible Society of Malawi is identified as its copyright holder, and permission is required before redistributing the complete text. Until a suitable licence is obtained, the reader provides a link to the official Chichewa Bible resource. See the [Bible Society of Malawi information](https://www.biblesociety-malawi.org/) and [Chichewa.Bible](https://chichewa.bible/).
 
-## Full Bible search
+## Storage and privacy
+No account or remote personal-data backend is introduced. Favourites, journal entries, progress and notes remain in browser storage on the current device and do not sync between devices. Bible book data is stored in IndexedDB where supported, with a localStorage fallback.
 
-VerseFinder can load the complete 66-book King James Version library (31,102 verses) from the open-source [Midvash Bible Data](https://github.com/midvash/bible-data) project. The KJV text is identified there as public domain. The app caches downloaded book data in IndexedDB when available, so later searches can use the locally cached library. An internet connection is needed for the first download.
+## Deployment
+Deploy the folder as a static site on any HTTPS-capable host. For Android packaging, a separate Capacitor build and device testing are still required.
