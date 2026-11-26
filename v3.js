@@ -58,7 +58,7 @@
       });
       if (!selected.length) throw new Error("This chapter could not be found in the downloaded book.");
       currentVerses = selected;
-      const maxChapter = Math.max(...rows.map(row => Number((row.ref.match(/\\s(\\d+):/) || [])[1] || 1)));
+      const maxChapter = Math.max(...rows.map(row => Number((row.ref.match(/\s(\d+):/ || [])[1] || 1)));
       if (chapterSelect.options.length !== maxChapter) {
         chapterSelect.innerHTML = Array.from({length:maxChapter}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join("");
       }
