@@ -3,7 +3,7 @@
   const $ = selector => document.querySelector(selector);
   const books = typeof BIBLE_BOOKS !== "undefined" ? BIBLE_BOOKS : [];
   const notes = (() => { try { return JSON.parse(localStorage.getItem("vf_notes") || "{}"); } catch { return {}; } })();
-  let currentBook = "Genesis", currentChapter = 1, currentVerses = [], currentMaxChapter = 50;
+  let currentBook = "Genesis", currentChapter = 1, currentVerse = 1, currentVerses = [], currentMaxChapter = 50, chapterLoadRequest = 0;
   const section = document.createElement("section");
   section.className = "view";
   section.id = "view-reader";
@@ -14,6 +14,8 @@
       <label>Chapter <select id="readerChapter" aria-label="Choose chapter"></select></label>
       <button class="action-button" id="readerPrevious" type="button">← Previous</button>
       <button class="action-button" id="readerNext" type="button">Next →</button>
+      <label class="reader-jump-label">Verse <input id="readerVerseNumber" type="number" min="1" value="1" inputmode="numeric" aria-label="Verse number"></label>
+      <button class="primary-button reader-jump-button" id="readerGoToVerse" type="button">Go to verse</button>
     </div>
     <div class="reader-status" id="readerStatus" role="status">Choose a book and chapter to begin.</div>
     <article class="reader-page"><h2 id="readerHeading">Genesis 1</h2><div id="readerVerses" class="reader-verses"></div></article>
@@ -33,6 +35,8 @@
   chapterSelect.addEventListener("change", () => { currentChapter = Number(chapterSelect.value); loadChapter(); });
   $("#readerPrevious").addEventListener("click", () => moveChapter(-1));
   $("#readerNext").addEventListener("click", () => moveChapter(1));
+  $("#readerGoToVerse").addEventListener("click", goToVerse);
+  $("#readerVerseNumber").addEventListener("keydown", event => { if (event.key === "Enter") goToVerse(); });
   function updateChapters() {
     const cached = window.vfBookMeta && window.vfBookMeta[currentBook];
     const count = cached || 50;
@@ -43,11 +47,13 @@
     return String(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   }
   async function loadChapter() {
+    const request = ++chapterLoadRequest;
     const status = $("#readerStatus"), output = $("#readerVerses");
     status.textContent = "Loading " + currentBook + " " + currentChapter + "…";
     output.innerHTML = "";
     try {
       const rows = await window.fetchKjvBook(currentBook);
+      if (request !== chapterLoadRequest) return false;
       const selected = rows.filter(row => {
         const match = row.ref.match(/\s(\d+):\d+/);
         return match && Number(match[1]) === currentChapter;
@@ -55,6 +61,9 @@
       if (!selected.length) throw new Error("This chapter could not be found in the downloaded book.");
       currentVerses = selected;
       currentMaxChapter = Math.max(...rows.map(row => { const match = row.ref.match(/\s(\d+):/); return match ? Number(match[1]) : 1; }));
+      currentVerse = 1;
+      $("#readerVerseNumber").max = String(selected.length);
+      $("#readerVerseNumber").value = "1";
       if (chapterSelect.options.length !== currentMaxChapter) {
         chapterSelect.innerHTML = Array.from({length:currentMaxChapter}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join("");
       }
@@ -63,14 +72,46 @@
         const number = Number((row.ref.match(/:(\d+)/) || [])[1]);
         const key = row.ref;
         const marked = Boolean(notes[key] && notes[key].highlighted);
-        return `<p class="reader-verse ${marked ? "is-highlighted" : ""}"><sup>${number}</sup> ${escapeText(row.text)} <button type="button" class="verse-note-button" data-note="${escapeText(key)}" aria-label="Add a note to ${escapeText(key)}">✎</button></p>`;
+        return `<p class="reader-verse ${marked ? "is-highlighted" : ""}" id="reader-verse-${number}" tabindex="-1"><sup>${number}</sup> ${escapeText(row.text)} <button type="button" class="verse-note-button" data-note="${escapeText(key)}" aria-label="Add a note to ${escapeText(key)}">✎</button></p>`;
       }).join("");
       status.textContent = selected.length + " verses · KJV · Saved on this device for offline reading";
       chapterSelect.value = String(currentChapter);
+      return true;
     } catch (error) {
-      status.textContent = error.message + " Connect to the internet once, then try again.";
+      if (request === chapterLoadRequest) status.textContent = error.message + " Connect to the internet once, then try again.";
+      return false;
     }
   }
+  function goToVerse() {
+    const input = $("#readerVerseNumber"), number = Number(input.value);
+    if (!Number.isInteger(number) || number < 1 || number > currentVerses.length) {
+      $("#readerStatus").textContent = `Enter a verse number from 1 to ${currentVerses.length || 1}.`;
+      input.focus();
+      return false;
+    }
+    currentVerse = number;
+    const target = $("#reader-verse-" + number);
+    if (!target) return false;
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+    target.focus({ preventScroll: true });
+    $("#readerStatus").textContent = `${currentBook} ${currentChapter}:${number} · KJV`;
+    return true;
+  }
+  window.vfOpenReference = async reference => {
+    const match = String(reference).match(/^(.+?)\s+(\d+):(\d+)/);
+    if (!match) return false;
+    const targetBook = books.find(book => book.toLowerCase() === match[1].trim().toLowerCase());
+    if (!targetBook) return false;
+    currentBook = targetBook;
+    currentChapter = Number(match[2]);
+    currentVerse = Number(match[3]);
+    bookSelect.value = currentBook;
+    updateChapters();
+    chapterSelect.value = String(currentChapter);
+    if (!await loadChapter()) return false;
+    $("#readerVerseNumber").value = String(currentVerse);
+    return goToVerse();
+  };
   async function moveChapter(direction) {
     const next = currentChapter + direction;
     if (next >= 1 && next <= currentMaxChapter) {
