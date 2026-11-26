@@ -22,13 +22,11 @@
   const main = document.querySelector("main.main");
   const footer = main && main.querySelector("footer");
   if (main && footer) main.insertBefore(section, footer);
-  const nav = document.createElement("button");
-  nav.className = "nav-item";
-  nav.dataset.view = "reader";
-  nav.innerHTML = '▤ <span>Read Bible</span>';
-  const navHome = document.querySelector('.nav-item[data-view="home"]');
-  if (navHome) navHome.parentNode.insertBefore(nav, navHome.nextSibling);
-  nav.addEventListener("click", () => { navigate("reader"); if (!currentVerses.length) loadChapter(); });
+  const nav = document.querySelector('.nav-item[data-view="reader"]');
+  if (nav) nav.addEventListener("click", () => {
+    navigate("reader");
+    if (!currentVerses.length) loadChapter();
+  });
   const bookSelect = $("#readerBook"), chapterSelect = $("#readerChapter");
   if (!bookSelect || !chapterSelect || !books.length) return;
   bookSelect.innerHTML = books.map(book => `<option value="${escapeText(book)}">${escapeText(book)}</option>`).join("");
