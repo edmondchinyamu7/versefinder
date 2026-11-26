@@ -22,11 +22,9 @@
   const main = document.querySelector("main.main");
   const footer = main && main.querySelector("footer");
   if (main && footer) main.insertBefore(section, footer);
-  const nav = document.querySelector('.nav-item[data-view="reader"]');
-  if (nav) nav.addEventListener("click", () => {
-    navigate("reader");
-    if (!currentVerses.length) loadChapter();
-  });
+  // The main app owns navigation. Expose the chapter loader to its
+  // single delegated navigation handler for this dynamically-created view.
+  window.vfLoadReaderChapter = () => { if (!currentVerses.length) loadChapter(); };
   const bookSelect = $("#readerBook"), chapterSelect = $("#readerChapter");
   if (!bookSelect || !chapterSelect || !books.length) return;
   bookSelect.innerHTML = books.map(book => `<option value="${escapeText(book)}">${escapeText(book)}</option>`).join("");
