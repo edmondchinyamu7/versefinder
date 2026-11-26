@@ -6,17 +6,24 @@ for (const file of ["app.js", "v3.js", "sw.js", "tests/smoke-test.mjs"]) {
   const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
   assert.equal(result.status, 0, `${file} syntax check failed: ${result.stderr}`);
 }
-const [html, manifestText, serviceWorker, reader, readme, app] = await Promise.all([
+const [html, manifestText, serviceWorker, reader, readme, app, publicApp, publicReader, publicWorker] = await Promise.all([
   readFile("index.html", "utf8"),
   readFile("manifest.webmanifest", "utf8"),
   readFile("sw.js", "utf8"),
   readFile("v3.js", "utf8"),
   readFile("README.md", "utf8"),
-  readFile("app.js", "utf8")
+  readFile("app.js", "utf8"),
+  readFile("public/app.js", "utf8"),
+  readFile("public/v3.js", "utf8"),
+  readFile("public/sw.js", "utf8")
 ]);
 const manifest = JSON.parse(manifestText);
 assert.ok(html.includes('rel="manifest"'), "manifest must be linked");
-assert.ok(html.includes('src="v3.js"'), "reader script must be loaded");
+assert.ok(html.includes('src="/app.js"'), "app script must load from the public directory");
+assert.ok(html.includes('src="/v3.js"'), "reader script must load from the public directory");
+assert.equal(publicApp, app, "public app script must match the maintained root source");
+assert.equal(publicReader, reader, "public reader script must match the maintained root source");
+assert.equal(publicWorker, serviceWorker, "public service worker must match the maintained root source");
 assert.ok(!html.includes("\\n"), "HTML must not contain escaped line-break text");
 assert.equal(manifest.name, "VerseFinder 3.0");
 assert.equal(manifest.display, "standalone");
@@ -25,6 +32,7 @@ assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be ca
 assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service worker must preserve unrelated origin caches");
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
 assert.ok(reader.includes("fetchKjvBook"), "reader must load real KJV book data");
+assert.ok(reader.includes('nav.dataset.view = "reader"'), "Bible reader navigation must be created");
 assert.ok(app.includes('const BIBLE_BOOK_FILE_IDS=["Gen","Exod"'), "KJV loader must map English book names to OSIS filenames");
 assert.ok(app.includes('data.englishName||data.name||name'), "KJV parser must display the full English book name");
 assert.ok(app.includes('encodeURIComponent(fileId)+".json"'), "KJV loader must request the mapped book file");
