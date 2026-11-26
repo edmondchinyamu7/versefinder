@@ -143,3 +143,23 @@ body.dark .reader-verse.is-highlighted{background:#51452b}
   .reader-jump-label input{width:100%}
   .reader-jump-button{flex:1}
 }
+
+
+/* Phase 2 — collections, personal backup and journal editing */
+.study-tools{margin:0 0 24px;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
+.study-tools-heading h2{font:600 23px 'Playfair Display';margin:7px 0 16px}
+.collection-create{display:flex;gap:9px;align-items:end;flex-wrap:wrap;margin:12px 0 18px}
+.collection-create label{display:grid;gap:6px;flex:1 1 220px;font-size:11px;color:var(--muted);font-weight:700}
+.collection-create input{width:100%;min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.collection-manager{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+.collection-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);font-size:11px}
+.collection-chip button{border:0;background:transparent;color:var(--purple);font-weight:700}
+.backup-controls{display:flex;align-items:center;justify-content:space-between;gap:15px;padding-top:16px;border-top:1px solid var(--line)}
+.backup-controls p{font-size:11px;color:var(--muted);line-height:1.6;margin:5px 0 0;max-width:560px}
+.backup-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.backup-import-label{cursor:pointer}
+.journal-entry-actions{float:right;display:flex;gap:9px}
+.edit-entry,.delete-entry{border:0;background:none;font-size:11px;font-weight:700;color:var(--purple)}
+.delete-entry{color:#b46c6c}
+#readerDownloadBook:disabled{opacity:.65;cursor:wait}
+@media(max-width:650px){.study-tools{padding:16px}.backup-controls{align-items:flex-start;flex-direction:column}.backup-actions{width:100%}.backup-actions>*{flex:1;text-align:center}.collection-create .primary-button{width:100%}}
