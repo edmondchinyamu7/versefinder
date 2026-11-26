@@ -4,7 +4,8 @@ A responsive Bible discovery and reading app, built with plain HTML, CSS and Jav
 
 ## Features
 - Search KJV verse text and references; browse topical collections.
-- Read the KJV book by book and chapter by chapter.\n- Follow a 30-day guided reading journey.
+- Read the KJV book by book and chapter by chapter.
+- Follow a 30-day guided reading journey.
 - Save favourites, prayer journal entries, reading progress, verse notes and highlights locally on the device.
 - Responsive layout and light/dark appearance.
 - Installable web-app shell with service-worker caching for offline access to the app interface.
