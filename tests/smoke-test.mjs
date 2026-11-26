@@ -32,8 +32,9 @@ assert.ok(html.includes('src="study.js"'), "personal study tools must be loaded"
 assert.ok(html.includes('src="platform.js"'), "platform enhancements must be loaded");
 const allViewsSelector = String.fromCharCode(36, 36, 40, 34, 46, 118, 105, 101, 119, 34, 41) + ".forEach";
 const singleViewSelector = String.fromCharCode(36, 40, 34, 46, 118, 105, 101, 119, 34, 41) + ".forEach";
-assert.ok(app.includes(allViewsSelector), "navigation must use the all-elements selector for every view");
-assert.ok(!app.includes(singleViewSelector), "navigation must not call forEach on the single-element selector");
+const navigationSource = app.slice(app.indexOf("function navigate"), app.indexOf("window.navigate"));
+assert.ok(navigationSource.includes(allViewsSelector), "navigation must use the all-elements selector for every view");
+assert.ok(!navigationSource.replace(allViewsSelector, "").includes(singleViewSelector), "navigation must not call forEach on the single-element selector");
 assert.ok(html.includes('class="skip-link"'), "keyboard users must have a skip link");
 assert.ok(html.includes('id="installApp"'), "install prompt control must exist");
 assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
