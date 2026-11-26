@@ -98,7 +98,7 @@
     return true;
   }
   window.vfOpenReference = async reference => {
-    const match = String(reference).match(/^(.+?)\\s+(\\d+):(\\d+)/);
+    const match = String(reference).match(/^(.+?)\s+(\d+):(\d+)/);
     if (!match) return false;
     const targetBook = books.find(book => book.toLowerCase() === match[1].trim().toLowerCase());
     if (!targetBook) return false;
