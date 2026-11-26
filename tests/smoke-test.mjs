@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 
-for (const file of ["app.js", "v3.js", "sw.js", "tests/smoke-test.mjs"]) {
+for (const file of ["app.js", "v3.js", "study.js", "sw.js", "tests/smoke-test.mjs"]) {
   const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
   assert.equal(result.status, 0, `${file} syntax check failed: ${result.stderr}`);
 }
