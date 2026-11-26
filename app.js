@@ -40,22 +40,25 @@ async function saveBook(name,data){
  try{const db=await bibleDb();if(db){await new Promise(resolve=>{const tx=db.transaction("books","readwrite");tx.objectStore("books").put(data,name);tx.oncomplete=tx.onerror=()=>resolve()});return}}catch{}
  try{localStorage.setItem("vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_"),JSON.stringify(data))}catch{}
 }
+const BIBLE_BOOK_FILE_IDS=["Gen","Exod","Lev","Num","Deut","Josh","Judg","Ruth","1Sam","2Sam","1Kgs","2Kgs","1Chr","2Chr","Ezra","Neh","Esth","Job","Ps","Prov","Eccl","Song","Isa","Jer","Lam","Ezek","Dan","Hos","Joel","Amos","Obad","Jonah","Mic","Nah","Hab","Zeph","Hag","Zech","Mal","Matt","Mark","Luke","John","Acts","Rom","1Cor","2Cor","Gal","Eph","Phil","Col","1Thess","2Thess","1Tim","2Tim","Titus","Phlm","Heb","Jas","1Pet","2Pet","1John","2John","3John","Jude","Rev"];
 async function fetchKjvBook(name){
  const cached=await cachedBook(name);if(cached)return parseKjvBook(cached,name);
- const url="https://raw.githubusercontent.com/midvash/bible-data/main/versions/en/kjv/books/"+encodeURIComponent(name)+".json";
- const response=await fetch(url);if(!response.ok)throw new Error("Could not load "+name);
+ const bookIndex=BIBLE_BOOKS.indexOf(name);
+ const fileId=bookIndex>=0?BIBLE_BOOK_FILE_IDS[bookIndex]:name;
+ const url="https://raw.githubusercontent.com/midvash/bible-data/main/versions/en/kjv/books/"+encodeURIComponent(fileId)+".json";
+ const response=await fetch(url);if(!response.ok)throw new Error("Could not load "+name+" ("+response.status+")");
  const data=await response.json();await saveBook(name,data);
  return parseKjvBook(data,name);
 }
 function parseKjvBook(data,name){
- const bookName=data.book||data.name||name, out=[];
+ const bookName=data.englishName||data.name||name, out=[];
  const chapters=data.chapters||[];
  if(Array.isArray(chapters)){
   chapters.forEach((chapter,ci)=>{
    const rows=chapter.verses||[];
    rows.forEach((v,vi)=>{
     const textValue=typeof v==="string"?v:v.text;
-    if(textValue)out.push({ref:bookName+" "+(chapter.chapter||ci+1)+":"+(v.verse||vi+1),text:String(textValue).replace(/\s+/g," ").trim(),topics:[]});
+    if(textValue)out.push({ref:bookName+" "+(chapter.chapter||ci+1)+":"+(v.number||v.verse||vi+1),text:String(textValue).replace(/\s+/g," ").trim(),topics:[]});
    });
   });
  }else{
