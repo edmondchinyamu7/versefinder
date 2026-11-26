@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 
-for (const file of ["app.js", "v3.js", "study.js", "sw.js", "tests/smoke-test.mjs"]) {
+for (const file of ["app.js", "v3.js", "study.js", "platform.js", "sw.js", "tests/smoke-test.mjs"]) {
   const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
   assert.equal(result.status, 0, `${file} syntax check failed: ${result.stderr}`);
 }
-const [html, manifestText, serviceWorker, reader, readme, app, styles, study] = await Promise.all([
+const [html, manifestText, serviceWorker, reader, readme, app, styles, study, platform] = await Promise.all([
   readFile("index.html", "utf8"),
   readFile("manifest.webmanifest", "utf8"),
   readFile("sw.js", "utf8"),
@@ -14,7 +14,8 @@ const [html, manifestText, serviceWorker, reader, readme, app, styles, study] = 
   readFile("README.md", "utf8"),
   readFile("app.js", "utf8"),
   readFile("styles.css", "utf8"),
-  readFile("study.js", "utf8")
+  readFile("study.js", "utf8"),
+  readFile("platform.js", "utf8")
 ]);
 const manifest = JSON.parse(manifestText);
 assert.ok(html.includes('rel="manifest"'), "manifest must be linked");
@@ -28,6 +29,12 @@ assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service wor
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
 assert.ok(serviceWorker.includes('"./study.js"'), "study tools must be included in the offline app shell");
 assert.ok(html.includes('src="study.js"'), "personal study tools must be loaded");
+assert.ok(html.includes('src="platform.js"'), "platform enhancements must be loaded");
+assert.ok(html.includes('class="skip-link"'), "keyboard users must have a skip link");
+assert.ok(html.includes('id="installApp"'), "install prompt control must exist");
+assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
+assert.ok(platform.includes("beforeinstallprompt"), "PWA install prompt must be supported");
+assert.ok(platform.includes("serviceWorker"), "service-worker updates must be handled");
 assert.ok(study.includes("vf_collections"), "custom verse collections must be stored locally");
 assert.ok(study.includes("VerseFinder study backup"), "personal study backup export and restore must be supported");
 assert.ok(study.includes("exportStudyData") && study.includes("importStudyData"), "backup controls must be wired");
