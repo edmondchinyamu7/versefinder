@@ -1,7 +1,7 @@
 /* VerseFinder 3.0: Bible reader, study notes and offline app support. */
 (() => {
   const $ = selector => document.querySelector(selector);
-  const books = window.BIBLE_BOOKS || [];
+  const books = typeof BIBLE_BOOKS !== "undefined" ? BIBLE_BOOKS : [];
   const notes = (() => { try { return JSON.parse(localStorage.getItem("vf_notes") || "{}"); } catch { return {}; } })();
   let currentBook = "Genesis", currentChapter = 1, currentVerses = [];
   const section = document.createElement("section");
@@ -28,20 +28,7 @@
   nav.innerHTML = '▤ <span>Read Bible</span>';
   const navHome = document.querySelector('.nav-item[data-view="home"]');
   if (navHome) navHome.parentNode.insertBefore(nav, navHome.nextSibling);
-  nav.addEventListener("click", () => navigate("reader"));
-  const originalNavigate = window.navigate;
-  function navigate(view) {
-    document.querySelectorAll(".view").forEach(node => node.classList.toggle("active", node.id === "view-" + view));
-    document.querySelectorAll(".nav-item").forEach(node => node.classList.toggle("active", node.dataset.view === view));
-    window.scrollTo(0, 0);
-    if (view === "reader" && !currentVerses.length) loadChapter();
-  }
-  window.navigate = navigate;
-  if (typeof originalNavigate === "function") {
-    document.querySelectorAll("[data-view]").forEach(button => {
-      button.addEventListener("click", () => navigate(button.dataset.view));
-    });
-  }
+  nav.addEventListener("click", () => { navigate("reader"); if (!currentVerses.length) loadChapter(); });
   const bookSelect = $("#readerBook"), chapterSelect = $("#readerChapter");
   if (!bookSelect || !chapterSelect || !books.length) return;
   bookSelect.innerHTML = books.map(book => `<option value="${escapeText(book)}">${escapeText(book)}</option>`).join("");
@@ -71,6 +58,10 @@
       });
       if (!selected.length) throw new Error("This chapter could not be found in the downloaded book.");
       currentVerses = selected;
+      const maxChapter = Math.max(...rows.map(row => Number((row.ref.match(/\\s(\\d+):/) || [])[1] || 1)));
+      if (chapterSelect.options.length !== maxChapter) {
+        chapterSelect.innerHTML = Array.from({length:maxChapter}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join("");
+      }
       $("#readerHeading").textContent = currentBook + " " + currentChapter;
       output.innerHTML = selected.map(row => {
         const number = Number((row.ref.match(/:(\d+)/) || [])[1]);
