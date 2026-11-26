@@ -45,7 +45,7 @@ body.dark .reader-verse.is-highlighted{background:#51452b}
 @media(max-width:650px){
   .sidebar{
     height:auto;min-height:76px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));
-    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;
+    display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;
     background:rgba(29,26,49,.97);backdrop-filter:blur(18px);
     border-top:1px solid #ffffff18;box-shadow:0 -8px 30px #17132620;
   }
@@ -69,4 +69,15 @@ body.dark .reader-verse.is-highlighted{background:#51452b}
   .more-panel-grid strong{font-size:12px}
   .more-panel-grid small{font-size:9px;color:var(--muted);margin-top:3px}
   .view{padding-bottom:125px}
+}
+
+/* Navigation fix: show exactly four deliberate mobile destinations. */
+@media(max-width:650px){
+  .sidebar{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .sidebar>.brand,.sidebar>.nav-label,.sidebar>.sidebar-bottom{display:none!important}
+  .sidebar>.nav-item:not(.mobile-secondary){display:flex!important}
+  .sidebar>.nav-item.mobile-secondary{display:none!important}
+  .sidebar>.nav-item{min-height:60px;height:60px;overflow:visible}
+  .sidebar>.nav-item span{font-size:10px;white-space:nowrap;overflow-wrap:normal}
+  .mobile-more-panel{max-height:min(62vh,430px);overflow-y:auto}
 }
