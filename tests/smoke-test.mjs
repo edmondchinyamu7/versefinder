@@ -30,8 +30,10 @@ assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch han
 assert.ok(serviceWorker.includes('"./study.js"'), "study tools must be included in the offline app shell");
 assert.ok(html.includes('src="study.js"'), "personal study tools must be loaded");
 assert.ok(html.includes('src="platform.js"'), "platform enhancements must be loaded");
-assert.ok(app.includes('$(".view").forEach'), "navigation must use the all-elements selector for every view");
-assert.ok(!app.includes('$(".view").forEach'), "navigation must not call forEach on the single-element selector");
+const allViewsSelector = String.fromCharCode(36, 36, 40, 34, 46, 118, 105, 101, 119, 34, 41) + ".forEach";
+const singleViewSelector = String.fromCharCode(36, 40, 34, 46, 118, 105, 101, 119, 34, 41) + ".forEach";
+assert.ok(app.includes(allViewsSelector), "navigation must use the all-elements selector for every view");
+assert.ok(!app.includes(singleViewSelector), "navigation must not call forEach on the single-element selector");
 assert.ok(html.includes('class="skip-link"'), "keyboard users must have a skip link");
 assert.ok(html.includes('id="installApp"'), "install prompt control must exist");
 assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
