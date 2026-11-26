@@ -58,7 +58,7 @@
       });
       if (!selected.length) throw new Error("This chapter could not be found in the downloaded book.");
       currentVerses = selected;
-      currentMaxChapter = Math.max(...rows.map(row => Number((row.ref.match(/\s(\d+):/ || [])[1] || 1)));
+      currentMaxChapter = Math.max(...rows.map(row => { const match = row.ref.match(/\s(\d+):/); return match ? Number(match[1]) : 1; }));
       if (chapterSelect.options.length !== currentMaxChapter) {
         chapterSelect.innerHTML = Array.from({length:currentMaxChapter}, (_, i) => `<option value="${i+1}">${i+1}</option>`).join("");
       }
@@ -92,7 +92,7 @@
     $("#readerStatus").textContent = "Loading " + targetBook + "…";
     try {
       const rows = await window.fetchKjvBook(targetBook);
-      const targetMax = Math.max(...rows.map(row => Number((row.ref.match(/\s(\d+):/) || [])[1] || 1)));
+      const targetMax = Math.max(...rows.map(row => { const match = row.ref.match(/\s(\d+):/); return match ? Number(match[1]) : 1; }));
       currentBook = targetBook;
       currentMaxChapter = targetMax;
       currentChapter = direction < 0 ? targetMax : 1;
