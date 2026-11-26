@@ -40,7 +40,7 @@ body.dark .reader-verse.is-highlighted{background:#51452b}
 
 /* Mobile navigation: focused primary tabs + an accessible More sheet */
 .mobile-more{display:none}
-.mobile-more-backdrop{display:none}
+.mobile-more-backdrop{display:none}[hidden]{display:none!important}
 .mobile-more-panel{display:none}
 @media(max-width:650px){
   .sidebar{
