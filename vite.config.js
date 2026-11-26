@@ -1,11 +1,9 @@
-import { defineConfig } from "vite";
-import { copyFileSync } from "node:fs";
-import { resolve } from "node:path";
+const { copyFileSync } = require("node:fs");
+const { resolve } = require("node:path");
 
-// app.js and v3.js intentionally remain classic scripts because they share
-// browser-global functions and data. Vite leaves classic script tags external,
-// so copy those files into the production output directory explicitly.
-export default defineConfig({
+// Keep these as classic scripts because app.js and v3.js share browser globals.
+// Vite leaves classic script tags external, so copy them into dist explicitly.
+module.exports = {
   plugins: [
     {
       name: "copy-versefinder-classic-scripts",
@@ -18,4 +16,4 @@ export default defineConfig({
       }
     }
   ]
-});
+};
