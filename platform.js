@@ -9,7 +9,10 @@
   window.addEventListener("online",()=>announce("You are back online."));
   window.addEventListener("offline",()=>announce("You are offline. Downloaded Bible books remain available on this device."));
   if("serviceWorker" in navigator&&location.protocol.startsWith("http")){
-    navigator.serviceWorker.ready.then(registration=>{registration.update().catch(()=>{});registration.addEventListener("updatefound",()=>{const installing=registration.installing;if(!installing)return;installing.addEventListener("statechange",()=>{if(installing.state==="installed"&&navigator.serviceWorker.controller)announce("A VerseFinder update is ready. Reload to use the latest version.")})})}).catch(()=>{});
+    navigator.serviceWorker.register("./sw.js",{scope:"./"}).then(registration=>{
+      registration.update().catch(()=>{});
+      registration.addEventListener("updatefound",()=>{const installing=registration.installing;if(!installing)return;installing.addEventListener("statechange",()=>{if(installing.state==="installed"&&navigator.serviceWorker.controller)announce("A VerseFinder update is ready. Reload to use the latest version.")})});
+    }).catch(()=>announce("Offline support could not start. Please reload while connected to the internet."));
     let refreshing=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(refreshing)return;refreshing=true;window.location.reload()});
   }
 })();
