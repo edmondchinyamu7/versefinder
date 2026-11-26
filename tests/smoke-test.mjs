@@ -25,6 +25,10 @@ assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be ca
 assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service worker must preserve unrelated origin caches");
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
 assert.ok(reader.includes("fetchKjvBook"), "reader must load real KJV book data");
+assert.ok(app.includes('const BIBLE_BOOK_FILE_IDS=["Gen","Exod"'), "KJV loader must map English book names to OSIS filenames");
+assert.ok(app.includes('data.englishName||data.name||name'), "KJV parser must display the full English book name");
+assert.ok(app.includes('encodeURIComponent(fileId)+".json"'), "KJV loader must request the mapped book file");
+
 assert.ok(reader.includes("vf_notes"), "reader notes must be stored locally");
 assert.ok(reader.includes("async function moveChapter(direction)"), "reader must support cross-book navigation");
 assert.ok(app.includes("Continue in hope"), "30-day reading plan must be included");
