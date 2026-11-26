@@ -16,11 +16,11 @@
       <button class="nav-item active" data-view="home" type="button">⌂ <span>Home</span></button>
       <button class="nav-item" data-view="reader" type="button">▤ <span>Read Bible</span></button>
       <button class="nav-item" data-view="search">⌕ <span>Find a verse</span></button>
-      <button class="nav-item" data-view="topics">◇ <span>Browse topics</span></button>
+      <button class="nav-item mobile-secondary" data-view="topics">◇ <span>Browse topics</span></button>
       <div class="nav-label">MY SPACE</div>
-      <button class="nav-item" data-view="favorites">♡ <span>Saved verses</span><b id="favCount">0</b></button>
-      <button class="nav-item" data-view="journal">✎ <span>Prayer journal</span></button>
-      <button class="nav-item" data-view="plan">▤ <span>Reading plan</span></button>
+      <button class="nav-item mobile-secondary" data-view="favorites">♡ <span>Saved verses</span><b id="favCount">0</b></button>
+      <button class="nav-item mobile-secondary" data-view="journal">✎ <span>Prayer journal</span></button>
+      <button class="nav-item mobile-secondary" data-view="plan">▤ <span>Reading plan</span></button>
       <div class="sidebar-bottom">
         <div class="verse-mini">“Thy word is a lamp unto my feet, and a light unto my path.”<small>PSALM 119:105 · KJV</small></div>
         <button id="themeToggle" class="theme-toggle">☼ <span>Switch appearance</span></button>
@@ -81,6 +81,17 @@
       <footer>VerseFinder <span>·</span> Made for moments that matter.</footer>
     </main>
   </div>
+  <div class="mobile-more-backdrop" id="mobileMoreBackdrop" hidden></div>
+  <section class="mobile-more-panel" id="mobileMorePanel" aria-label="More VerseFinder sections" aria-hidden="true">
+    <div class="more-panel-handle"></div>
+    <div class="more-panel-heading"><div><span class="eyebrow">YOUR VERSEFINDER</span><h2>More to explore</h2></div><button id="closeMobileMore" type="button" aria-label="Close menu">×</button></div>
+    <div class="more-panel-grid">
+      <button type="button" data-view="topics"><span>◇</span><strong>Browse topics</strong><small>Find scripture by feeling</small></button>
+      <button type="button" data-view="favorites"><span>♡</span><strong>Saved verses</strong><small>Your personal collection</small></button>
+      <button type="button" data-view="journal"><span>✎</span><strong>Prayer journal</strong><small>Your thoughts and prayers</small></button>
+      <button type="button" data-view="plan"><span>▤</span><strong>Reading plan</strong><small>Build a daily rhythm</small></button>
+    </div>
+  </section>
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js"></script>
   <script src="v3.js"></script>
