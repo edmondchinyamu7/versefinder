@@ -163,3 +163,15 @@ body.dark .reader-verse.is-highlighted{background:#51452b}
 .delete-entry{color:#b46c6c}
 #readerDownloadBook:disabled{opacity:.65;cursor:wait}
 @media(max-width:650px){.study-tools{padding:16px}.backup-controls{align-items:flex-start;flex-direction:column}.backup-actions{width:100%}.backup-actions>*{flex:1;text-align:center}.collection-create .primary-button{width:100%}}
+
+
+/* Phase 3 — accessibility, installation and responsive refinements */
+.skip-link{position:fixed;top:10px;left:10px;z-index:1000;padding:12px 16px;background:var(--surface);color:var(--ink);border:2px solid var(--purple);border-radius:9px;transform:translateY(-160%);transition:transform .15s;font-weight:700;font-size:13px}
+.skip-link:focus{transform:translateY(0)}
+:focus-visible{outline:3px solid var(--purple2);outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.6}
+.topbar-actions{display:flex;align-items:center;gap:10px}
+.install-button{min-height:40px;padding:8px 13px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--purple);font-size:12px;font-weight:700}
+.install-button[hidden]{display:none}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+@media(max-width:650px){.topbar-actions{gap:7px}.install-button{min-height:38px;padding:7px 9px;font-size:10px}.skip-link{left:8px}}

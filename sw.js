@@ -1,7 +1,8 @@
-const CACHE_NAME = "versefinder-v3-4-phase-2";
-const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./study.js", "./manifest.webmanifest", "./icon.svg"];
+const CACHE_NAME = "versefinder-v3-5-phase-3";
+const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./study.js", "./platform.js", "./manifest.webmanifest", "./icon.svg"];
+const APP_SHELL_URL = new URL("./index.html", self.registration.scope).href;
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL.map(path => new URL(path, self.registration.scope).href))).then(() => self.skipWaiting()));
 });
 self.addEventListener("activate", event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(
@@ -17,7 +18,7 @@ self.addEventListener("fetch", event => {
     event.respondWith(fetch(request).then(response => {
       if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
       return response;
-    }).catch(() => caches.match(request).then(cached => cached || (request.mode === "navigate" ? caches.match("./index.html") : Response.error()))));
+    }).catch(() => caches.match(request).then(cached => cached || (request.mode === "navigate" ? caches.match(APP_SHELL_URL) : Response.error()))));
     return;
   }
   event.respondWith(caches.match(request).then(cached => cached || fetch(request).then(response => {

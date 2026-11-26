@@ -9,6 +9,7 @@
   <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Skip to main content</a>
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="#"><span class="brand-mark">✦</span><span>Verse<span class="brand-accent">Finder</span><small>WORD FOR EVERY SEASON</small></span></a>
@@ -28,11 +29,11 @@
       </div>
     </aside>
 
-    <main class="main">
+    <main class="main" id="mainContent" tabindex="-1">
       <header class="topbar">
         <div class="mobile-brand">✦ VerseFinder</div>
         <div class="top-date" id="todayLabel"></div>
-        <button class="icon-button" id="headerTheme" aria-label="Toggle theme">☼</button>
+        <div class="topbar-actions"><button class="install-button" id="installApp" type="button">＋ Install app</button><button class="icon-button" id="headerTheme" type="button" aria-label="Toggle colour theme" aria-pressed="false">☼</button></div>
       </header>
 
       <section class="view active" id="view-home">
@@ -53,7 +54,7 @@
 
       <section class="view" id="view-search">
         <div class="page-intro"><div class="eyebrow">SCRIPTURE DISCOVERY</div><h1>Find a verse.</h1><p>Search words, references, or choose a topic to explore.</p></div>
-        <div class="search-box"><span>⌕</span><input id="searchInput" placeholder="Try “fear”, “John 3:16”, or “peace”…" autocomplete="off"><button id="clearSearch">×</button></div>
+        <div class="search-box" role="search"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" aria-label="Search Bible verses or references" placeholder="Try “fear”, “John 3:16”, or “peace”…" autocomplete="off"><button id="clearSearch">×</button></div>
         <div class="filter-row" id="searchFilters"></div>
         <div class="results-meta" id="resultsMeta">Explore all verses</div>
         <div class="verse-list" id="searchResults"></div>
@@ -97,5 +98,6 @@
   <script src="app.js"></script>
   <script src="v3.js"></script>
   <script src="study.js"></script>
+  <script src="platform.js"></script>
 </body>
 </html>

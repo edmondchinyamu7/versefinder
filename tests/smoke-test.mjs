@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 
-for (const file of ["app.js", "v3.js", "study.js", "sw.js", "tests/smoke-test.mjs"]) {
+for (const file of ["app.js", "v3.js", "study.js", "platform.js", "sw.js", "tests/smoke-test.mjs"]) {
   const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
   assert.equal(result.status, 0, `${file} syntax check failed: ${result.stderr}`);
 }
-const [html, manifestText, serviceWorker, reader, readme, app, styles, study] = await Promise.all([
+const [html, manifestText, serviceWorker, reader, readme, app, styles, study, platform] = await Promise.all([
   readFile("index.html", "utf8"),
   readFile("manifest.webmanifest", "utf8"),
   readFile("sw.js", "utf8"),
@@ -14,7 +14,8 @@ const [html, manifestText, serviceWorker, reader, readme, app, styles, study] = 
   readFile("README.md", "utf8"),
   readFile("app.js", "utf8"),
   readFile("styles.css", "utf8"),
-  readFile("study.js", "utf8")
+  readFile("study.js", "utf8"),
+  readFile("platform.js", "utf8")
 ]);
 const manifest = JSON.parse(manifestText);
 assert.ok(html.includes('rel="manifest"'), "manifest must be linked");
@@ -23,11 +24,26 @@ assert.ok(!html.includes("\\n"), "HTML must not contain escaped line-break text"
 assert.equal(manifest.name, "VerseFinder 3.0");
 assert.equal(manifest.display, "standalone");
 assert.ok(manifestText.includes("icon.svg"), "install icon must be configured");
+assert.ok(manifest.icons.some(icon => icon.sizes === "192x192"), "PWA manifest must declare a 192px install icon");
+assert.ok(manifest.icons.some(icon => icon.sizes === "512x512"), "PWA manifest must declare a 512px install icon");
 assert.ok(serviceWorker.includes("addAll(APP_SHELL)"), "offline shell must be cached");
 assert.ok(serviceWorker.includes('key.startsWith("versefinder-")'), "service worker must preserve unrelated origin caches");
 assert.ok(serviceWorker.includes('addEventListener("fetch"'), "offline fetch handler must exist");
 assert.ok(serviceWorker.includes('"./study.js"'), "study tools must be included in the offline app shell");
 assert.ok(html.includes('src="study.js"'), "personal study tools must be loaded");
+assert.ok(html.includes('src="platform.js"'), "platform enhancements must be loaded");
+const allViewsSelector = String.fromCharCode(36, 36, 40, 34, 46, 118, 105, 101, 119, 34, 41) + ".forEach";
+const singleViewSelector = String.fromCharCode(36, 40, 34, 46, 118, 105, 101, 119, 34, 41) + ".forEach";
+const navigationSource = app.slice(app.indexOf("function navigate"), app.indexOf("window.navigate"));
+assert.ok(navigationSource.includes(allViewsSelector), "navigation must use the all-elements selector for every view");
+assert.ok(!navigationSource.replace(allViewsSelector, "").includes(singleViewSelector), "navigation must not call forEach on the single-element selector");
+assert.ok(html.includes('class="skip-link"'), "keyboard users must have a skip link");
+assert.ok(html.includes('id="installApp" type="button">＋ Install app'), "install option must remain visible before the browser prompt is available");
+assert.ok(styles.includes("@media(prefers-reduced-motion:reduce)"), "reduced-motion preferences must be respected");
+assert.ok(platform.includes("beforeinstallprompt"), "PWA install prompt must be supported");
+assert.ok(platform.includes("serviceWorker.register(\"./sw.js\""), "the app must register its service worker");
+assert.ok(platform.includes("serviceWorker.ready"), "service-worker updates must be handled");
+assert.ok(serviceWorker.includes("APP_SHELL_URL"), "offline navigation must have a stable cached homepage fallback");
 assert.ok(study.includes("vf_collections"), "custom verse collections must be stored locally");
 assert.ok(study.includes("VerseFinder study backup"), "personal study backup export and restore must be supported");
 assert.ok(study.includes("exportStudyData") && study.includes("importStudyData"), "backup controls must be wired");
