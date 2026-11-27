@@ -189,3 +189,24 @@ button:disabled{cursor:not-allowed;opacity:.6}
 .brand img{display:block;width:198px;height:auto;max-height:84px;object-fit:contain;object-position:left center}
 .mobile-brand img{display:block;width:138px;height:auto;max-height:54px;object-fit:contain}
 @media(max-width:650px){.brand img{width:190px}.mobile-brand{display:flex;align-items:center;min-height:56px}}
+
+
+/* Fix the mobile brand lockup: clear V emblem, readable wordmark, no clipping */
+.mobile-brand { min-width:0; flex:0 1 auto; }
+.mobile-brand img { display:block; width:190px; max-width:100%; height:auto; max-height:58px; object-fit:contain; }
+.brand img { display:block; width:210px; max-width:100%; height:auto; max-height:78px; object-fit:contain; }
+@media (max-width:650px) {
+  .topbar { justify-content:space-between; gap:8px; min-width:0; }
+  .mobile-brand { display:flex; align-items:center; flex:0 1 42%; min-width:0; }
+  .mobile-brand img { width:100%; max-width:165px; max-height:52px; }
+  .top-date { flex:0 1 54px; min-width:0; text-align:center; font-size:10px; line-height:1.25; }
+  .topbar-actions { flex:0 0 auto; gap:6px; }
+  .install-button { min-height:36px; padding:6px 7px; font-size:10px; }
+  .icon-button { width:34px; height:34px; flex:0 0 34px; }
+}
+@media (max-width:380px) {
+  .mobile-brand { flex-basis:38%; }
+  .mobile-brand img { max-width:145px; }
+  .top-date { flex-basis:45px; font-size:9px; }
+  .install-button { padding:5px 6px; font-size:9px; }
+}
