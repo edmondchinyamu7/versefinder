@@ -1,5 +1,5 @@
-const CACHE_NAME = "versefinder-v3-5-phase-3";
-const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./study.js", "./platform.js", "./manifest.webmanifest", "./icon.svg"];
+const CACHE_NAME = "versefinder-v3-6-branding";
+const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./v3.js", "./study.js", "./platform.js", "./manifest.webmanifest", "./icon.svg", "./versefinder-wordmark.svg"];
 const APP_SHELL_URL = new URL("./index.html", self.registration.scope).href;
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL.map(path => new URL(path, self.registration.scope).href))).then(() => self.skipWaiting()));
