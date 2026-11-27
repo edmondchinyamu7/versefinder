@@ -175,3 +175,21 @@ button:disabled{cursor:not-allowed;opacity:.6}
 .install-button[hidden]{display:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media(max-width:650px){.topbar-actions{gap:7px}.install-button{min-height:38px;padding:7px 9px;font-size:10px}.skip-link{left:8px}}
+
+
+/* Downloads Manager */
+.downloads-panel{margin:18px 0 24px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}
+.downloads-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.downloads-heading h2{font:600 23px 'Playfair Display',serif;margin:5px 0}
+.downloads-heading p{font-size:11px;color:var(--muted);margin:5px 0}
+.downloads-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--soft);color:var(--purple);font-size:24px}
+.downloads-controls{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0 10px}
+.download-progress{padding:10px 12px;border-radius:8px;background:var(--bg);color:var(--muted);font-size:11px;line-height:1.5}
+.downloaded-books{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.download-book-row{display:flex;align-items:center;justify-content:space-between;gap:9px;min-width:0;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--bg)}
+.download-book-row>div{min-width:0;display:grid;gap:4px}
+.download-book-row strong{font-size:11px;color:var(--ink);overflow-wrap:anywhere}
+.download-book-row small{font-size:9px;color:var(--muted)}
+.download-remove{flex:none;padding:7px 9px;font-size:10px}
+.downloads-footnote{font-size:10px;line-height:1.6;color:var(--muted);margin:12px 0 0}
+@media(max-width:650px){.downloads-panel{padding:15px}.downloads-controls>*{flex:1}.downloaded-books{grid-template-columns:1fr}.download-book-row{padding:9px 10px}}
