@@ -52,10 +52,10 @@ assert.ok(app.includes("data-collection-verse"), "verse cards must offer collect
 assert.ok(reader.includes("readerDownloadBook"), "reader must offer a book download for offline use");
 assert.ok(app.includes("window.vfOfflineBooks"), "offline book storage must expose manager controls");
 assert.ok(app.includes("getAllKeys()"), "downloads manager must enumerate IndexedDB book records");
-assert.ok(v3.includes('id="downloadAllBooks"'), "reader must offer a full-Bible download action");
-assert.ok(v3.includes('data-remove-book'), "saved books must be removable from offline storage");
-assert.ok(v3.includes("refreshDownloads"), "downloads manager must refresh its saved-book list");
-assert.ok(v3.includes("downloadCancelled"), "full-Bible downloads must be cancellable between books");
+assert.ok(reader.includes('id="downloadAllBooks"'), "reader must offer a full-Bible download action");
+assert.ok(reader.includes('data-remove-book'), "saved books must be removable from offline storage");
+assert.ok(reader.includes("refreshDownloads"), "downloads manager must refresh its saved-book list");
+assert.ok(reader.includes("downloadCancelled"), "full-Bible downloads must be cancellable between books");
 assert.ok(styles.includes(".downloads-panel"), "downloads manager must have responsive panel styling");
 assert.ok(reader.includes("fetchKjvBook"), "reader must load real KJV book data");
 assert.ok(app.includes('const BIBLE_BOOK_FILE_IDS=["Gen","Exod"'), "KJV loader must map English book names to OSIS filenames");
