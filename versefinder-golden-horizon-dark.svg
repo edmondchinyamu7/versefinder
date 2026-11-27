@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1250 360" role="img" aria-labelledby="title desc">
 <title id="title">VerseFinder</title>
-<desc id="desc">Single V emblem and VerseFinder wordmark in lavender and gold, designed for the deep purple desktop sidebar.</desc>
+<desc id="desc">Single bright lavender V emblem and Verse lettering with gold Finder lettering and underline, optimized for a deep purple background.</desc>
 <defs>
- <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7D13A"/><stop offset=".55" stop-color="#DDA600"/><stop offset="1" stop-color="#B98208"/></linearGradient>
- <linearGradient id="violet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9BDFB"/><stop offset="1" stop-color="#9C8BE5"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE36A"/><stop offset=".55" stop-color="#F5BD35"/><stop offset="1" stop-color="#D99A18"/></linearGradient>
+ <linearGradient id="violet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F0E8FF"/><stop offset=".48" stop-color="#D7C5FF"/><stop offset="1" stop-color="#B69AFF"/></linearGradient>
 </defs>
 <path d="M20 82 L100 82 L165 228 C204 160 254 63 385 36 C325 71 282 132 243 202 C216 251 181 303 148 319 C132 327 113 320 101 303 Z" fill="url(#violet)"/>
 <path d="M385 36 C324 73 276 135 238 204 C212 250 178 302 148 319 C215 292 278 234 324 165 C355 119 385 65 435 40 C419 34 402 32 385 36 Z" fill="url(#gold)"/>
 <g font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-7">
- <text x="250" y="250" font-size="166" fill="#E8E1FF">erse</text>
+ <text x="250" y="250" font-size="166" fill="#F4EEFF">erse</text>
  <text x="570" y="250" font-size="166" fill="url(#gold)">Finder</text>
 </g>
 <path d="M246 312 C470 260 815 265 1190 313" fill="none" stroke="url(#gold)" stroke-width="13" stroke-linecap="round"/>
