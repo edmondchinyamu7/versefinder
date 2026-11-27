@@ -1,16 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 370" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1250 360" role="img" aria-labelledby="title desc">
 <title id="title">VerseFinder</title>
-<desc id="desc">The VerseFinder blue and gold logo with a sweeping gold underline.</desc>
+<desc id="desc">Blue and gold VerseFinder wordmark with a distinct sweeping V emblem and gold underline.</desc>
 <defs>
-  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6C928"/><stop offset=".55" stop-color="#DDA600"/><stop offset="1" stop-color="#B98208"/></linearGradient>
-  <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#06285F"/><stop offset="1" stop-color="#001B48"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F7D13A"/><stop offset=".55" stop-color="#DDA600"/><stop offset="1" stop-color="#B98208"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#082C67"/><stop offset="1" stop-color="#001A46"/></linearGradient>
 </defs>
-<!-- The sweeping V mark -->
-<path d="M18 95 L104 95 L158 224 C204 144 251 56 374 31 C326 58 285 107 245 171 C211 226 180 278 144 310 C127 323 109 322 94 305 Z" fill="url(#blue)"/>
-<path d="M374 31 C307 64 256 119 214 185 C190 222 165 269 144 310 C206 288 266 231 310 165 C342 116 367 67 420 34 C406 29 390 28 374 31 Z" fill="url(#gold)"/>
-<g font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-10">
- <text x="166" y="267" font-size="211" fill="url(#blue)">Verse</text>
- <text x="463" y="267" font-size="211" fill="url(#gold)">Finder</text>
+<!-- Distinct V emblem, kept clear of the lettering -->
+<path d="M20 82 L100 82 L165 228 C204 160 254 63 385 36 C325 71 282 132 243 202 C216 251 181 303 148 319 C132 327 113 320 101 303 Z" fill="url(#blue)"/>
+<path d="M385 36 C324 73 276 135 238 204 C212 250 178 302 148 319 C215 292 278 234 324 165 C355 119 385 65 435 40 C419 34 402 32 385 36 Z" fill="url(#gold)"/>
+<g font-family="Arial, Helvetica, sans-serif" font-weight="800" letter-spacing="-7">
+ <text x="250" y="250" font-size="166" fill="url(#blue)">Verse</text>
+ <text x="660" y="250" font-size="166" fill="url(#gold)">Finder</text>
 </g>
-<path d="M183 334 C350 279 596 276 862 324" fill="none" stroke="url(#gold)" stroke-width="15" stroke-linecap="round"/>
+<path d="M246 312 C470 260 815 265 1190 313" fill="none" stroke="url(#gold)" stroke-width="13" stroke-linecap="round"/>
 </svg>
