@@ -50,6 +50,45 @@ async function fetchKjvBook(name){
  const data=await response.json();await saveBook(name,data);
  return parseKjvBook(data,name);
 }
+// Shared offline-book controls used by the reader's Downloads Manager.
+window.vfOfflineBooks = {
+ async list(){
+  let names=[];
+  try{
+   const db=await bibleDb();
+   if(db)names=await new Promise(resolve=>{
+    const request=db.transaction("books","readonly").objectStore("books").getAllKeys();
+    request.onsuccess=()=>resolve(request.result||[]);
+    request.onerror=()=>resolve([]);
+   });
+  }catch{}
+  for(const name of BIBLE_BOOKS){
+   const key="vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_");
+   try{if(localStorage.getItem(key)&&!names.includes(name))names.push(name)}catch{}
+  }
+  const entries=[];
+  for(const name of names){
+   const data=await cachedBook(name);
+   if(data)entries.push({name,verses:parseKjvBook(data,name).length,bytes:JSON.stringify(data).length});
+  }
+  return entries.sort((a,b)=>BIBLE_BOOKS.indexOf(a.name)-BIBLE_BOOKS.indexOf(b.name));
+ },
+ async remove(name){
+  try{
+   const db=await bibleDb();
+   if(db)await new Promise((resolve,reject)=>{
+    const tx=db.transaction("books","readwrite");
+    tx.objectStore("books").delete(name);
+    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+   });
+  }catch(error){throw new Error("Could not remove the saved book from browser storage.")}
+  try{localStorage.removeItem("vf_kjv_"+name.toLowerCase().replace(/[^a-z0-9]/g,"_"))}catch{}
+ },
+ async storage(){
+  try{if(navigator.storage&&navigator.storage.estimate)return await navigator.storage.estimate()}catch{}
+  return null;
+ }
+};
 function parseKjvBook(data,name){
  const bookName=data.englishName||data.name||name, out=[];
  const chapters=data.chapters||[];

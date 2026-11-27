@@ -19,6 +19,13 @@
       <button class="action-button" id="readerDownloadBook" type="button">↓ Download book</button>
     </div>
     <div class="reader-status" id="readerStatus" role="status">Choose a book and chapter to begin.</div>
+    <section class="downloads-panel" aria-labelledby="downloadsHeading">
+      <div class="downloads-heading"><div><div class="eyebrow">READ WITHOUT DATA</div><h2 id="downloadsHeading">Offline downloads</h2><p id="downloadSummary">Checking saved Bible books…</p></div><span class="downloads-mark" aria-hidden="true">↓</span></div>
+      <div class="downloads-controls"><button class="primary-button" id="downloadAllBooks" type="button">↓ Download full Bible</button><button class="action-button" id="refreshDownloads" type="button">Refresh list</button></div>
+      <div class="download-progress" id="downloadProgress" role="status" aria-live="polite">Books you open or download are saved on this device.</div>
+      <div class="downloaded-books" id="downloadedBooks"><p class="results-meta">Loading saved books…</p></div>
+      <p class="downloads-footnote">Downloads are stored in this browser on this device. They do not sync to other devices. Browser storage can be cleared by device or browser settings.</p>
+    </section>
     <article class="reader-page"><h2 id="readerHeading">Genesis 1</h2><div id="readerVerses" class="reader-verses"></div></article>
     <div class="language-note"><strong>Chichewa Bible</strong><p>Buku Lopatulika is protected text. VerseFinder will only add its full text after permission and a suitable digital licence are confirmed.</p><a href="https://chichewa.bible/" target="_blank" rel="noopener noreferrer">Visit the Bible Society of Malawi's Chichewa Bible resource ↗</a></div>
   `;
@@ -37,7 +44,60 @@
   $("#readerPrevious").addEventListener("click", () => moveChapter(-1));
   $("#readerNext").addEventListener("click", () => moveChapter(1));
   $("#readerGoToVerse").addEventListener("click", goToVerse);
-  $("#readerDownloadBook").addEventListener("click", async () => {const button=$("#readerDownloadBook"),status=$("#readerStatus");button.disabled=true;button.textContent="Downloading…";status.textContent="Downloading "+currentBook+" for offline reading…";try{const rows=await window.fetchKjvBook(currentBook);if(!rows.length)throw new Error("No verses were returned");status.textContent=currentBook+" is saved on this device for offline reading ("+rows.length.toLocaleString()+" verses).";button.textContent="✓ Downloaded"}catch(error){status.textContent="Download failed. Check your connection and try again.";button.textContent="↓ Download book"}finally{button.disabled=false}});
+  let downloadCancelled=false, downloadRunning=false;
+  const downloadProgress=$("#downloadProgress"), downloadedBooks=$("#downloadedBooks");
+  async function refreshDownloads(){
+    const saved=await window.vfOfflineBooks.list();
+    const estimate=await window.vfOfflineBooks.storage();
+    const bytes=saved.reduce((total,item)=>total+item.bytes,0);
+    const formatBytes=value=>value<1024?value+" B":value<1048576?(value/1024).toFixed(1)+" KB":(value/1048576).toFixed(1)+" MB";
+    $("#downloadSummary").textContent=saved.length+" of "+books.length+" books saved · "+formatBytes(bytes)+" estimated Bible data";
+    if(estimate&&Number.isFinite(estimate.quota))$("#downloadSummary").textContent+=" · "+formatBytes(estimate.quota)+" browser quota";
+    downloadedBooks.innerHTML=saved.length?saved.map(item=>'<div class="download-book-row"><div><strong>'+escapeText(item.name)+'</strong><small>'+item.verses.toLocaleString()+' verses · '+formatBytes(item.bytes)+'</small></div><button class="action-button download-remove" type="button" data-remove-book="'+escapeText(item.name)+'">Remove</button></div>').join(""):'<p class="results-meta">No complete books saved yet. Download a book or the full Bible while connected.</p>';
+    const current=saved.some(item=>item.name===currentBook);
+    $("#readerDownloadBook").textContent=current?"✓ Book saved":"↓ Download book";
+  }
+  async function downloadOne(name){
+    const rows=await window.fetchKjvBook(name);
+    if(!rows.length)throw new Error("No verses returned for "+name);
+    return rows.length;
+  }
+  $("#readerDownloadBook").addEventListener("click", async () => {
+    const button=$("#readerDownloadBook"),status=$("#readerStatus");
+    button.disabled=true;button.textContent="Saving…";status.textContent="Saving "+currentBook+" for offline reading…";
+    try{const count=await downloadOne(currentBook);status.textContent=currentBook+" is ready offline ("+count.toLocaleString()+" verses).";await refreshDownloads()}
+    catch(error){status.textContent="Download failed. Check your connection and try again."}
+    finally{button.disabled=false}
+  });
+  $("#downloadAllBooks").addEventListener("click",async()=>{
+    const button=$("#downloadAllBooks");
+    if(downloadRunning){downloadCancelled=true;button.disabled=true;downloadProgress.textContent="Stopping after the current book…";return}
+    if(!confirm("Download all 66 KJV books to this device? This uses internet data and browser storage."))return;
+    downloadRunning=true;downloadCancelled=false;button.textContent="Cancel download";
+    const existing=new Set((await window.vfOfflineBooks.list()).map(item=>item.name));
+    const queue=books.filter(name=>!existing.has(name));let completed=0,failed=[];
+    for(const name of queue){
+      if(downloadCancelled)break;
+      downloadProgress.textContent="Downloading "+name+" · "+(completed+1)+" of "+queue.length+" remaining";
+      try{await downloadOne(name)}catch(error){failed.push(name)}
+      completed++;
+      downloadProgress.textContent="Saved "+completed+" of "+queue.length+" remaining books"+(failed.length?" · "+failed.length+" failed":"");
+      await refreshDownloads();
+    }
+    downloadRunning=false;downloadCancelled=false;button.disabled=false;button.textContent="↓ Download full Bible";
+    downloadProgress.textContent=failed.length?"Finished with "+failed.length+" unavailable book(s): "+failed.join(", "):"Download complete. "+(await window.vfOfflineBooks.list()).length+" books are saved on this device.";
+    if(button.dataset.cancelled==="true")button.dataset.cancelled="false";
+  });
+  $("#refreshDownloads").addEventListener("click",refreshDownloads);
+  downloadedBooks.addEventListener("click",async event=>{
+    const button=event.target.closest("[data-remove-book]");if(!button)return;
+    const name=button.dataset.removeBook;
+    if(!confirm("Remove "+name+" from offline storage?"))return;
+    button.disabled=true;
+    try{await window.vfOfflineBooks.remove(name);downloadProgress.textContent=name+" removed from this device.";await refreshDownloads()}
+    catch(error){downloadProgress.textContent=error.message;button.disabled=false}
+  });
+  refreshDownloads();
   $("#readerVerseNumber").addEventListener("keydown", event => { if (event.key === "Enter") goToVerse(); });
   function updateChapters() {
     const cached = window.vfBookMeta && window.vfBookMeta[currentBook];
