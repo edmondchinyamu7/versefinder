@@ -175,3 +175,11 @@ button:disabled{cursor:not-allowed;opacity:.6}
 .install-button[hidden]{display:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 @media(max-width:650px){.topbar-actions{gap:7px}.install-button{min-height:38px;padding:7px 9px;font-size:10px}.skip-link{left:8px}}
+
+
+/* VerseFinder wordmark branding */
+.brand{margin-left:0;gap:0}
+.brand img{display:block;width:184px;max-width:100%;height:auto}
+.mobile-brand{align-items:center}
+.mobile-brand img{display:block;width:145px;height:auto}
+@media(max-width:650px){.brand img{width:170px}.mobile-brand img{width:136px}}

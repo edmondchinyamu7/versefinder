@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "VerseFinder 3.0",
+  "name": "VerseFinder",
   "short_name": "VerseFinder",
   "description": "Read, search, save and study Bible verses online or offline.",
   "start_url": "./",
@@ -12,15 +12,9 @@
   "icons": [
     {
       "src": "./icon.svg",
-      "sizes": "192x192",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "./icon.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
     }
   ]
-}
+}\n

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 150" role="img" aria-labelledby="title">
+<title id="title">VerseFinder</title>
+<g font-family="Arial, Helvetica, sans-serif" font-size="100" font-weight="700" letter-spacing="-5">
+<text x="8" y="105" fill="#ffffff">Verse</text><text x="257" y="105" fill="#d5a85d">Finder</text>
+</g>
+<path d="M260 119 C355 132 490 131 655 112" fill="none" stroke="#d5a85d" stroke-width="5" stroke-linecap="round"/>
+<path d="M8 24 L35 24 L62 82 L89 24 L116 24 L70 124 L57 124 Z" fill="none" stroke="#d5a85d" stroke-width="5" opacity=".0"/>
+</svg>
