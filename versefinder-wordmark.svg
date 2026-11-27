@@ -1,8 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 150" role="img" aria-labelledby="title">
-<title id="title">VerseFinder</title>
-<g font-family="Arial, Helvetica, sans-serif" font-size="100" font-weight="700" letter-spacing="-5">
-<text x="8" y="105" fill="#ffffff">Verse</text><text x="257" y="105" fill="#d5a85d">Finder</text>
-</g>
-<path d="M260 119 C355 132 490 131 655 112" fill="none" stroke="#d5a85d" stroke-width="5" stroke-linecap="round"/>
-<path d="M8 24 L35 24 L62 82 L89 24 L116 24 L70 124 L57 124 Z" fill="none" stroke="#d5a85d" stroke-width="5" opacity=".0"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 150" role="img" aria-labelledby="title desc">
+  <title id="title">VerseFinder</title>
+  <desc id="desc">Elegant premium wordmark in warm ivory and gold, designed for a deep navy background.</desc>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="98" font-weight="600" letter-spacing="-3.5">
+    <text x="8" y="106" fill="#F7F4ED">Verse</text>
+    <text x="251" y="106" fill="#D6AD63">Finder</text>
+  </g>
+  <path d="M254 123 C350 133 482 132 632 116" fill="none" stroke="#D6AD63" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="635" cy="115" r="4" fill="#D6AD63"/>
 </svg>
